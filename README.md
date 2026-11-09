@@ -1,3 +1,10 @@
+> ## 🍎 Android to Apple edition
+> Is fork mein Android TV ko **Apple TV jaisa** banane ke saath **Family Photos screensaver**, **Namaz Timings + alert/lock**,
+> **Ramadan mode** (Sehri/Iftar, dua) aur **curly font** joda gaya hai. Windows PC se step-by-step setup:
+> **[docs/ANDROID_TO_APPLE_GUIDE.md](docs/ANDROID_TO_APPLE_GUIDE.md)** · Theme: [`themes/android-to-apple`](themes/android-to-apple)
+>
+> Tested on Realme AI PONT (Android TV 9). Original project: [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) (MIT).
+
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>

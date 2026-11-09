@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dancing Script (SIL OFL 1.1, see DancingScript-OFL.txt) at weight 700: the curly script the owner
+     chose for the whole TV. Android 8 ignores the weight and draws the default instance. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <font
+        android:font="@font/dancingscript"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        android:fontVariationSettings="'wght' 700"
+        tools:targetApi="28" />
+</font-family>

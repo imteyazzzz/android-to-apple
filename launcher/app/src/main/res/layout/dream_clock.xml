@@ -40,10 +40,10 @@
                 android:format12Hour="a"
                 android:format24Hour=""
                 android:textColor="#99FFFFFF"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:fontFamily="@string/font_medium"
-                android:letterSpacing="0.08"
-                android:textAllCaps="true" />
+                android:letterSpacing="0.02"
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <TextClock
@@ -54,9 +54,9 @@
             android:format12Hour="@string/date_format"
             android:format24Hour="@string/date_format"
             android:textColor="#8CFFFFFF"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:fontFamily="@string/font_regular"
-            android:letterSpacing="0.14"
-            android:textAllCaps="true" />
+            android:letterSpacing="0.02"
+            android:textAllCaps="false" />
     </LinearLayout>
 </FrameLayout>

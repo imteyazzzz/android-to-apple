@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Crescent and star for Namaz Timings in the Quick Settings panel, in the style of the other row icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22dp" android:height="22dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M13.5,3.2 A9,9 0 1,0 20.8,15.6 A7.2,7.2 0 1,1 13.5,3.2 Z" />
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M18.20,4.10 L18.79,5.79 L20.58,5.83 L19.15,6.91 L19.67,8.62 L18.20,7.60 L16.73,8.62 L17.25,6.91 L15.82,5.83 L17.61,5.79 Z" />
+</vector>

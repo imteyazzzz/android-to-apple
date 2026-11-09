@@ -9,6 +9,14 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- PhotoDream: reads family photos from a TVPhotos folder on a USB drive or the TV's storage.
+         Granted with pm grant over adb. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Namaz alert (NamazAlarm): an exact alarm before each jamaat, set again after the TV boots. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
          runtime: build-and-install grants it with pm grant, so lint's Android 12 "ask for COARSE with
          FINE" rule does not apply here. -->
@@ -94,6 +102,48 @@
             </intent-filter>
         </activity>
 
+        <!-- Namaz Timings: the masjid's jamaat times, set with the remote. Shown as a Home tile (AppAdapter lets
+             this one activity of the launcher's own package through). Its own task: in the launcher's singleTask
+             task, the tile's NEW_TASK intent only brought Home back to the front and the screen never opened. -->
+        <activity
+            android:name=".NamazActivity"
+            android:taskAffinity="com.gathin.tvhome.namaz"
+            android:excludeFromRecents="true"
+            android:label="Namaz Timings"
+            android:banner="@drawable/banner_namaz"
+            android:icon="@drawable/banner_namaz"
+            android:exported="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Namaz alert: full-screen cover with a chime before each jamaat (NamazAlarm). Its own task, so the
+             launcher's singleTask task never swallows it. -->
+        <activity
+            android:name=".NamazCoverActivity"
+            android:exported="false"
+            android:taskAffinity="com.gathin.tvhome.namazcover"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:screenOrientation="landscape" />
+
+        <receiver
+            android:name=".NamazAlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".LauncherSettingsActivity"
             android:exported="false"
@@ -161,6 +211,18 @@
         <service
             android:name=".ClockDream"
             android:label="@string/dream_name"
+            android:exported="true"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!-- Family photo slideshow screensaver (PhotoDream): photos from a TVPhotos folder on USB or the TV. -->
+        <service
+            android:name=".PhotoDream"
+            android:label="Family Photos"
             android:exported="true"
             android:permission="android.permission.BIND_DREAM_SERVICE">
             <intent-filter>

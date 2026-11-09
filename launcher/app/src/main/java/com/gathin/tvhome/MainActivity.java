@@ -605,7 +605,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnSettings.setOnClickListener(v -> {
             if (launcherSettingsButton) startActivityForResult(
                     new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
-            else open(systemIntent(Settings.ACTION_SETTINGS));
+            // settings_key_panel: the glass Quick Settings panel (Namaz Timings, Picture, Network, Apps...) first,
+            // the TV's own Settings one row down, so the first step stays in the launcher's look.
+            else open(settingsKeyPanel ? new Intent(this, QuickSettingsActivity.class)
+                    : systemIntent(Settings.ACTION_SETTINGS));
         });
         btnReorder = findViewById(R.id.btnReorder);
         btnReorder.setOnClickListener(v -> toggleReorder());
@@ -839,6 +842,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 break;
         }
         if (openLiveTvAfterBoot()) return;
+        NamazAlarm.schedule(this);
+        if (NamazAlarm.coverActive(this)) {   // Home pressed during the namaz cover: the cover stays up
+            startActivity(NamazAlarm.coverIntent(this));
+            return;
+        }
         updateGreeting();
         updateRace();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
@@ -2284,6 +2292,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             greeting.setTextColor(greetingColor);
         }
         if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));
+        TextView namaz = findViewById(R.id.namazNext);
+        if (namaz != null) namaz.setText(NamazTimes.nextLine(this));
     }
 
     // ---- race-weekend panel (a theme's race_calendar) -----------------------------------------------
@@ -2919,7 +2929,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     () -> startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
         } else {
             addInputRow(rows, popup, R.drawable.ic_settings, getString(R.string.settings), -1,
-                    () -> open(systemIntent(Settings.ACTION_SETTINGS)));
+                    () -> open(settingsKeyPanel ? new Intent(this, QuickSettingsActivity.class)
+                            : systemIntent(Settings.ACTION_SETTINGS)));
         }
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (220 * density), Math.min(panel.getMeasuredWidth(), (int) (360 * density))));

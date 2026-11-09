@@ -1,0 +1,13 @@
+{
+  "wallpaper": true,
+  "wallpaper_rotation_minutes": 60,
+  "wallpaper_dim": 15,
+  "cinematic_home": true,
+  "cinematic_scrim": 70,
+  "cinematic_art": 40,
+  "dock_glass": true,
+  "app_glow": true,
+  "icon_only_buttons": true,
+  "icon_only_inputs": true,
+  "settings_key_panel": true
+}
