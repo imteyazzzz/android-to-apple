@@ -1136,6 +1136,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        ClickSound.onKey(this, event);
         if (handleSettingsKey(event)) return true;
         if (tileMenuEnabled && !reordering && openPopup == null && cardPrompt == null
                 && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
@@ -2295,6 +2296,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));
         TextView namaz = findViewById(R.id.namazNext);
         if (namaz != null) namaz.setText(NamazTimes.nextLine(this));
+        Weather.update(this, findViewById(R.id.weather));
     }
 
     // ---- race-weekend panel (a theme's race_calendar) -----------------------------------------------

@@ -270,14 +270,18 @@
                             android:textAllCaps="false"
                             android:includeFontPadding="false" />
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="true">
+
                         <TextClock
                             android:id="@+id/date"
                             android:gravity="left"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:singleLine="@bool/date_single_line"
-                            android:maxLines="2"
-                            android:lineSpacingExtra="6dp"
+                            android:singleLine="true"
                             android:ellipsize="end"
                             android:format12Hour="@string/date_format_home"
                             android:format24Hour="@string/date_format_home"
@@ -286,6 +290,18 @@
                             android:fontFamily="@string/font_regular"
                             android:letterSpacing="0.02"
                             android:textAllCaps="false" />
+
+                        <!-- Today's weather after the date ("  ·  ☀ 28°"), from Weather (Open-Meteo); empty until loaded. -->
+                        <TextView
+                            android:id="@+id/weather"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textColor="#E6FFFFFF"
+                            android:textSize="19sp"
+                            android:fontFamily="@string/font_regular"
+                            android:letterSpacing="0.02" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 

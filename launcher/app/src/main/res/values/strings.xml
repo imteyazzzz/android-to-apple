@@ -147,4 +147,5 @@
     <string name="last_opened">Last opened %1$s</string>
     <string name="namaz_timings" translatable="false">Namaz Timings</string>
     <string name="quick_brightness" translatable="false">Brightness</string>
+    <string name="quick_click_sound" translatable="false">Click sound</string>
 </resources>

@@ -29,6 +29,10 @@ is fork mein neeche wale features jode gaye hain.
 - **Home aur screensaver par agli namaz:** `Asr 4:30 PM · in 35m`, aur jamaat ke 15 min tak `· now`.
 - **Namaz alert:** jamaat se 5 min pehle 3 baar chime aur **15 min ke liye full-screen lock** ("Asr Namaz Time · Please go to pray"). Is dauraan YouTube ya koi app nahi khulta. TV standby mein ho to kuch nahi bajta.
 - **Ramadan mode:** Sehri/Iftar countdown, Iftar se 10 min pehle lock, dua, Iftar par chime, aur Ramadan mein Maghrib ka lock band.
+- **Click sound:** remote se chalne par halki "tik", OK par gehri "tok" (Apple TV jaisa). ⚙️ panel mein On/Off.
+- **App khulne ka animation:** app apni tile se bada hokar khulta hai.
+- **Mausam:** Home par date ke baad, jaise `☀️ 28°` ([Open-Meteo](https://open-meteo.com), free, bina key). Theme ki
+  `config.json` mein apne shehar ka `"latitude"` aur `"longitude"` daaliye (misal: Hyderabad `17.385`, `78.487`).
 - **Glass Quick Settings panel:** ⚙️ dabane par Namaz Timings, **Brightness ◀ ▶** (TV backlight, MediaTek TVs par), Network, Apps aur TV settings.
   Brightness ke liye `WRITE_SECURE_SETTINGS` permission chahiye (section 6). Jin TVs mein `picture_backlight` setting nahi hoti, wahan yeh row nahi dikhti.
   Backlight **0 ke baad bhi ◀** dabane par **Dim 10% → 80%** aata hai: poori screen (video bhi) par ek gehri parat. Iske liye
@@ -158,6 +162,13 @@ adb push config.json $D/config.json
 Get-ChildItem wallpapers\*.jpg | ForEach-Object { adb push $_.FullName "$D/wallpapers/$($_.Name)" }
 adb shell "echo $(Get-Random) > $D/theme_revision"
 adb shell "am force-stop com.gathin.tvhome; am start -a android.intent.action.MAIN -c android.intent.category.HOME"
+```
+
+**Mausam ke liye** `config.json` mein apne shehar ki location jodiye (Google Maps par shehar dhoondh kar):
+
+```json
+"latitude": 17.385,
+"longitude": 78.487
 ```
 
 **Faltu apps Home se chhupana:** `config.json` mein `hidden_apps` jodiye (package naam). TV ke apps ki list:

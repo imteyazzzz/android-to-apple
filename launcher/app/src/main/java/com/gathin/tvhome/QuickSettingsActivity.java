@@ -28,6 +28,7 @@ public final class QuickSettingsActivity extends Activity {
         LinearLayout rows = findViewById(R.id.rows);
         addRow(rows, R.drawable.ic_moon, R.string.namaz_timings, 0, new Intent(this, NamazActivity.class));
         addBrightnessRow(rows);
+        addClickSoundRow(rows);
         addRow(rows, R.drawable.ic_settings, R.string.tv_settings, 0, SystemSettings.intent(this, Settings.ACTION_SETTINGS));
         // Many TVs (MediaTek Android TV 9) answer no Display page at all; leave the row out instead of a dead one.
         if (getPackageManager().resolveActivity(new Intent(Settings.ACTION_DISPLAY_SETTINGS), 0) != null) {
@@ -72,6 +73,35 @@ public final class QuickSettingsActivity extends Activity {
                 Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
             }
             finish();
+        });
+        rows.addView(row);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        ClickSound.onKey(this, event);
+        return super.dispatchKeyEvent(event);
+    }
+
+    /** Click sound On/Off: OK, Left or Right toggles it. */
+    private void addClickSoundRow(LinearLayout rows) {
+        View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        ((ImageView) row.findViewById(R.id.icon)).setImageResource(R.drawable.ic_sound);
+        ((TextView) row.findViewById(R.id.title)).setText(R.string.quick_click_sound);
+        row.findViewById(R.id.dot).setVisibility(View.GONE);
+        TextView value = row.findViewById(R.id.status);
+        value.setTextSize(15);
+        Runnable show = () -> value.setText(ClickSound.enabled(this) ? "On" : "Off");
+        show.run();
+        row.setOnKeyListener((v, keyCode, e) -> {
+            boolean toggle = keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+                    || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER;
+            if (!toggle) return false;
+            if (e.getAction() == KeyEvent.ACTION_DOWN && e.getRepeatCount() == 0) {
+                ClickSound.setEnabled(this, !ClickSound.enabled(this));
+                show.run();
+            }
+            return true;
         });
         rows.addView(row);
     }

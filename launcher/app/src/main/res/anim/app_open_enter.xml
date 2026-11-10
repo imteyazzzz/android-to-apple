@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The opened app grows in from the middle while it fades in, like an Apple TV app launch. -->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:interpolator/decelerate_cubic"
-    android:duration="200">
-    <alpha android:fromAlpha="0.65" android:toAlpha="1.0" />
-    <scale android:fromXScale="0.97" android:toXScale="1.0"
-        android:fromYScale="0.97" android:toYScale="1.0"
+    android:duration="320">
+    <alpha android:fromAlpha="0.0" android:toAlpha="1.0" />
+    <scale android:fromXScale="0.82" android:toXScale="1.0"
+        android:fromYScale="0.82" android:toYScale="1.0"
         android:pivotX="50%" android:pivotY="50%" />
 </set>
