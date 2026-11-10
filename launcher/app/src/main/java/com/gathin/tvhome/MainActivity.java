@@ -844,6 +844,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (openLiveTvAfterBoot()) return;
         NamazAlarm.schedule(this);
         DimService.ensure(this);   // extra dim back on after a reboot or a force stop
+        ClickSound.preload(this);
         if (NamazAlarm.coverActive(this)) {   // Home pressed during the namaz cover: the cover stays up
             startActivity(NamazAlarm.coverIntent(this));
             return;

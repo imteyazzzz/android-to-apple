@@ -26,6 +26,11 @@ final class ClickSound {
         c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(ON, on).apply();
     }
 
+    /** Loads the sounds ahead of the first key press (SoundPool decodes asynchronously; a cold play is silent). */
+    static void preload(Context c) {
+        if (enabled(c)) load(c);
+    }
+
     private static void load(Context c) {
         if (pool != null) return;
         pool = new SoundPool.Builder().setMaxStreams(2).setAudioAttributes(new AudioAttributes.Builder()
