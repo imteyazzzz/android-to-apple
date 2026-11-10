@@ -47,7 +47,12 @@ final class RamadanTimes {
                 + s.get(Calendar.DAY_OF_MONTH)).apply();
     }
 
+    static void setStart(Context c, int year, int month, int day) {
+        prefs(c).edit().putInt(START, year * 10000 + month * 100 + day).apply();
+    }
+
     static int days(Context c) { return prefs(c).getInt(DAYS, 30); }
+    static void setDays(Context c, int n) { prefs(c).edit().putInt(DAYS, n == 29 ? 29 : 30).apply(); }
     static void toggleDays(Context c) { prefs(c).edit().putInt(DAYS, days(c) == 30 ? 29 : 30).apply(); }
 
     static int countdownMinutes(Context c) { return prefs(c).getInt(COUNTDOWN, 10); }

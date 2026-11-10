@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TV Namaz Times</title>
+<meta name="theme-color" content="#06231c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #071512; --card: #0f2420; --line: #1e3a33; --text: #eef6f3; --dim: #9db7ae;
+    --accent: #f6d678; --ok: #7fe0b5; --err: #ff8a80;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; font-family: Inter, system-ui, sans-serif; color: var(--text);
+    background: radial-gradient(circle at 20% 0%, #0d3b30 0%, var(--bg) 55%) fixed;
+    padding: 20px 16px 48px;
+  }
+  main { max-width: 520px; margin: 0 auto; }
+  h1 { font-family: "Dancing Script", cursive; font-weight: 600; font-size: 40px; margin: 6px 0 2px; }
+  .sub { color: var(--dim); margin: 0 0 18px; font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+  .card h2 { font-size: 15px; margin: 0 0 10px; color: var(--accent); font-weight: 600; letter-spacing: .02em; }
+  label.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0;
+              border-bottom: 1px solid var(--line); font-size: 16px; }
+  label.row:last-child { border-bottom: 0; }
+  input, select { font: inherit; color: var(--text); background: #0a1a17; border: 1px solid var(--line);
+                  border-radius: 10px; padding: 8px 10px; min-width: 0; }
+  input[type=time], input[type=date] { width: 150px; }
+  input[type=number] { width: 90px; text-align: right; }
+  input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--ok); }
+  input.wide { width: 100%; }
+  .stack { display: grid; gap: 10px; }
+  button { font: inherit; font-weight: 600; border: 0; border-radius: 14px; padding: 14px; width: 100%;
+           background: var(--accent); color: #1b1405; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 10px; }
+  .msg { min-height: 22px; font-size: 14px; margin: 10px 2px; }
+  .msg.ok { color: var(--ok); } .msg.err { color: var(--err); }
+  .hint { color: var(--dim); font-size: 13px; line-height: 1.5; }
+  .hidden { display: none; }
+  .sticky { position: sticky; bottom: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Namaz Times</h1>
+  <p class="sub">TV par 15 minute mein, ya Home khulte hi, apne aap aa jaata hai.</p>
+
+  <!-- 1. One-time setup: the Supabase project (saved on this phone only) -->
+  <section id="setup" class="card hidden">
+    <h2>Supabase connect (sirf ek baar)</h2>
+    <div class="stack">
+      <input id="sbUrl" class="wide" placeholder="Project URL, jaise https://abcd.supabase.co" autocomplete="off">
+      <input id="sbKey" class="wide" placeholder="anon public key" autocomplete="off">
+      <button id="saveSetup">Save</button>
+      <p class="hint">Supabase → Project Settings → API mein milega. Yeh sirf is phone par save hota hai.</p>
+    </div>
+  </section>
+
+  <!-- 2. Login -->
+  <section id="login" class="card hidden">
+    <h2>Login</h2>
+    <div class="stack">
+      <input id="email" type="email" class="wide" placeholder="Email" autocomplete="username">
+      <input id="password" type="password" class="wide" placeholder="Password" autocomplete="current-password">
+      <button id="doLogin">Login</button>
+      <button id="resetSetup" class="ghost">Supabase project badlein</button>
+    </div>
+  </section>
+
+  <!-- 3. The times -->
+  <form id="editor" class="hidden">
+    <section class="card">
+      <h2>Masjid jamaat</h2>
+      <label class="row">Fajr <input type="time" name="fajr"></label>
+      <label class="row">Zuhr <input type="time" name="zuhr"></label>
+      <label class="row">Asr <input type="time" name="asr"></label>
+      <label class="row">Maghrib <input type="time" name="maghrib"></label>
+      <label class="row">Isha <input type="time" name="isha"></label>
+      <label class="row">Jumu'ah <input type="time" name="jumuah"></label>
+    </section>
+
+    <section class="card">
+      <h2>Alert</h2>
+      <label class="row">Chime + lock screen <input type="checkbox" name="alert_on"></label>
+      <label class="row">Jamaat se pehle (min) <input type="number" min="0" max="60" name="alert_before_min"></label>
+      <label class="row">Lock kitni der (min) <input type="number" min="1" max="30" name="lock_min"></label>
+      <label class="row">Screensaver par dikhayein <input type="checkbox" name="show_on_screensaver"></label>
+    </section>
+
+    <section class="card">
+      <h2>Ramadan</h2>
+      <label class="row">Pehla roza <input type="date" name="ramadan_start"></label>
+      <label class="row">Roze
+        <select name="ramadan_days"><option value="30">30</option><option value="29">29</option></select>
+      </label>
+      <label class="row">Sehri ends, pehla roza <input type="time" name="sehri_first"></label>
+      <label class="row">Sehri ends, aakhri roza <input type="time" name="sehri_last"></label>
+      <label class="row">Iftar, pehla roza <input type="time" name="iftar_first"></label>
+      <label class="row">Iftar, aakhri roza <input type="time" name="iftar_last"></label>
+      <label class="row">Iftar countdown lock (min) <input type="number" min="1" max="30" name="iftar_countdown_min"></label>
+    </section>
+
+    <div class="sticky">
+      <button type="submit" id="save">Save</button>
+      <div id="msg" class="msg"></div>
+    </div>
+    <p class="hint" id="updated"></p>
+    <button type="button" id="logout" class="ghost">Logout</button>
+  </form>
+
+  <div id="topmsg" class="msg"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const show = id => ['setup', 'login', 'editor'].forEach(s => $(s).classList.toggle('hidden', s !== id));
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} },
+  };
+  const say = (el, text, kind) => { el.textContent = text; el.className = 'msg ' + (kind || ''); };
+
+  // ?url=...&key=... prefills the setup once (handy as a link or QR code)
+  const q = new URLSearchParams(location.search);
+  if (q.get('url') && q.get('key')) { store.set('sb_url', q.get('url')); store.set('sb_key', q.get('key')); }
+
+  let sb = null;
+  const form = $('editor');
+  const BOOLS = ['alert_on', 'show_on_screensaver'];
+  const NUMS = ['alert_before_min', 'lock_min', 'ramadan_days', 'iftar_countdown_min'];
+
+  function connect() {
+    const url = store.get('sb_url').trim(), key = store.get('sb_key').trim();
+    if (!url || !key) { show('setup'); return; }
+    sb = supabase.createClient(url, key);
+    sb.auth.getSession().then(({ data }) => data.session ? load() : show('login'));
+  }
+
+  async function load() {
+    show('editor');
+    say($('msg'), 'Load ho raha hai...');
+    const { data, error } = await sb.from('tv_namaz').select('data, updated_at').eq('id', 1).single();
+    if (error) { say($('msg'), 'Load nahi hua: ' + error.message, 'err'); return; }
+    const d = data.data || {};
+    for (const el of form.elements) {
+      if (!el.name || !(el.name in d)) continue;
+      if (el.type === 'checkbox') el.checked = !!d[el.name];
+      else el.value = d[el.name];
+    }
+    say($('msg'), '');
+    $('updated').textContent = 'Aakhri badlav: ' + new Date(data.updated_at).toLocaleString();
+  }
+
+  $('saveSetup').onclick = () => {
+    store.set('sb_url', $('sbUrl').value.trim());
+    store.set('sb_key', $('sbKey').value.trim());
+    connect();
+  };
+  $('resetSetup').onclick = () => { store.del('sb_url'); store.del('sb_key'); show('setup'); };
+
+  $('doLogin').onclick = async () => {
+    const { error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+    if (error) { say($('topmsg'), 'Login nahi hua: ' + error.message, 'err'); return; }
+    say($('topmsg'), '');
+    load();
+  };
+  $('logout').onclick = async () => { await sb.auth.signOut(); show('login'); };
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const d = {};
+    for (const el of form.elements) {
+      if (!el.name) continue;
+      if (BOOLS.includes(el.name)) d[el.name] = el.checked;
+      else if (NUMS.includes(el.name)) d[el.name] = parseInt(el.value, 10) || 0;
+      else d[el.name] = el.value;
+    }
+    say($('msg'), 'Save ho raha hai...');
+    const { data, error } = await sb.from('tv_namaz').update({ data: d }).eq('id', 1).select('updated_at');
+    if (error || !data || !data.length) {
+      say($('msg'), 'Save nahi hua' + (error ? ': ' + error.message : ' (email ko permission nahi)'), 'err');
+      return;
+    }
+    say($('msg'), 'Save ho gaya ✓ TV par 15 min mein (ya Home khulte hi)', 'ok');
+    $('updated').textContent = 'Aakhri badlav: ' + new Date(data[0].updated_at).toLocaleString();
+  };
+
+  connect();
+})();
+</script>
+</body>
+</html>

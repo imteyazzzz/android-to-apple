@@ -16,6 +16,18 @@ public class NamazAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        if (NamazSync.ACTION_SYNC.equals(action)) {
+            // Times from Supabase: the fetch runs off the main thread; the alert is set again inside if they changed.
+            PendingResult result = goAsync();
+            new Thread(() -> {
+                try {
+                    NamazSync.fetch(context);
+                } finally {
+                    result.finish();
+                }
+            }, "namaz-sync").start();
+            return;
+        }
         if (ACTION_ALERT.equals(action)) {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             boolean screenOn = pm == null || pm.isInteractive();
@@ -36,6 +48,9 @@ public class NamazAlarmReceiver extends BroadcastReceiver {
             }
         }
         NamazAlarm.schedule(context);   // always line up the next one
-        if (!ACTION_ALERT.equals(action)) DimService.ensure(context);   // boot: extra dim back on
+        if (!ACTION_ALERT.equals(action)) {
+            DimService.ensure(context);              // boot: extra dim back on
+            NamazSync.scheduleRepeating(context);    // boot: Supabase check every 15 minutes
+        }
     }
 }
