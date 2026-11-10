@@ -29,7 +29,8 @@ is fork mein neeche wale features jode gaye hain.
 - **Home aur screensaver par agli namaz:** `Asr 4:30 PM · in 35m`, aur jamaat ke 15 min tak `· now`.
 - **Namaz alert:** jamaat se 5 min pehle 3 baar chime aur **15 min ke liye full-screen lock** ("Asr Namaz Time · Please go to pray"). Is dauraan YouTube ya koi app nahi khulta. TV standby mein ho to kuch nahi bajta.
 - **Ramadan mode:** Sehri/Iftar countdown, Iftar se 10 min pehle lock, dua, Iftar par chime, aur Ramadan mein Maghrib ka lock band.
-- **Glass Quick Settings panel:** ⚙️ dabane par Namaz Timings, Picture, Network, Apps aur TV settings.
+- **Glass Quick Settings panel:** ⚙️ dabane par Namaz Timings, **Brightness ◀ ▶** (TV backlight, MediaTek TVs par), Network, Apps aur TV settings.
+  Brightness ke liye `WRITE_SECURE_SETTINGS` permission chahiye (section 6). Jin TVs mein `picture_backlight` setting nahi hoti, wahan yeh row nahi dikhti.
 
 ---
 
@@ -119,6 +120,7 @@ adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c 
 adb push app\build\outputs\apk\release\app-release.apk /data/local/tmp/tv.apk
 adb shell pm install -r /data/local/tmp/tv.apk
 adb shell pm grant com.gathin.tvhome android.permission.READ_EXTERNAL_STORAGE
+adb shell pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS
 adb shell am start -n com.gathin.tvhome/.MainActivity
 ```
 

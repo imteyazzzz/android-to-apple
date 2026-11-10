@@ -146,4 +146,5 @@
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Last opened %1$s</string>
     <string name="namaz_timings" translatable="false">Namaz Timings</string>
+    <string name="quick_brightness" translatable="false">Brightness</string>
 </resources>
