@@ -31,6 +31,8 @@ is fork mein neeche wale features jode gaye hain.
 - **Ramadan mode:** Sehri/Iftar countdown, Iftar se 10 min pehle lock, dua, Iftar par chime, aur Ramadan mein Maghrib ka lock band.
 - **Glass Quick Settings panel:** ⚙️ dabane par Namaz Timings, **Brightness ◀ ▶** (TV backlight, MediaTek TVs par), Network, Apps aur TV settings.
   Brightness ke liye `WRITE_SECURE_SETTINGS` permission chahiye (section 6). Jin TVs mein `picture_backlight` setting nahi hoti, wahan yeh row nahi dikhti.
+  Backlight **0 ke baad bhi ◀** dabane par **Dim 10% → 80%** aata hai: poori screen (video bhi) par ek gehri parat. Iske liye
+  `SYSTEM_ALERT_WINDOW` (appops, section 6) chahiye. ▶ se dim pehle hatta hai, phir backlight badhti hai. TV restart ke baad bhi dim bana rehta hai.
 
 ---
 
@@ -121,6 +123,7 @@ adb push app\build\outputs\apk\release\app-release.apk /data/local/tmp/tv.apk
 adb shell pm install -r /data/local/tmp/tv.apk
 adb shell pm grant com.gathin.tvhome android.permission.READ_EXTERNAL_STORAGE
 adb shell pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS
+adb shell appops set com.gathin.tvhome SYSTEM_ALERT_WINDOW allow
 adb shell am start -n com.gathin.tvhome/.MainActivity
 ```
 

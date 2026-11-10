@@ -15,6 +15,9 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <!-- Namaz alert (NamazAlarm): an exact alarm before each jamaat, set again after the TV boots. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Extra dim (DimService): a dark layer over the screen below backlight 0. Granted with appops over adb. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
@@ -132,6 +135,10 @@
             android:turnScreenOn="true"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:screenOrientation="landscape" />
+
+        <service
+            android:name=".DimService"
+            android:exported="false" />
 
         <receiver
             android:name=".NamazAlarmReceiver"

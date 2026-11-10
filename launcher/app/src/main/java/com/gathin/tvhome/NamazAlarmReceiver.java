@@ -36,5 +36,6 @@ public class NamazAlarmReceiver extends BroadcastReceiver {
             }
         }
         NamazAlarm.schedule(context);   // always line up the next one
+        if (!ACTION_ALERT.equals(action)) DimService.ensure(context);   // boot: extra dim back on
     }
 }

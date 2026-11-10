@@ -92,14 +92,29 @@ public final class QuickSettingsActivity extends Activity {
         row.findViewById(R.id.dot).setVisibility(View.GONE);
         TextView value = row.findViewById(R.id.status);
         value.setTextSize(15);
-        Runnable show = () -> value.setText("◀  "
-                + Settings.Global.getInt(getContentResolver(), BACKLIGHT, 50) + "  ▶");
+        Runnable show = () -> {
+            int dim = DimService.level(this);
+            value.setText("◀  " + (dim > 0 ? "Dim " + dim + "%"
+                    : String.valueOf(Settings.Global.getInt(getContentResolver(), BACKLIGHT, 50))) + "  ▶");
+        };
         show.run();
         row.setOnKeyListener((v, keyCode, e) -> {
             int dir = keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : keyCode == KeyEvent.KEYCODE_DPAD_LEFT ? -1 : 0;
             if (dir == 0) return false;
             if (e.getAction() == KeyEvent.ACTION_DOWN) {
                 int cur = Settings.Global.getInt(getContentResolver(), BACKLIGHT, 50);
+                int dim = DimService.level(this);
+                // Below backlight 0 the screen is still bright on many panels: go on into Dim (a dark layer
+                // over everything), 10% a step up to 80%; Right takes the dim off first.
+                if ((dir < 0 && cur <= 0) || (dir > 0 && dim > 0)) {
+                    if (dir < 0 && !Settings.canDrawOverlays(this)) {
+                        Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
+                    } else {
+                        DimService.setLevel(this, dim - dir * 10);
+                    }
+                    show.run();
+                    return true;
+                }
                 int next = Math.max(0, Math.min(100, (cur / BACKLIGHT_STEP + dir) * BACKLIGHT_STEP));
                 try {
                     Settings.Global.putInt(getContentResolver(), BACKLIGHT, next);
